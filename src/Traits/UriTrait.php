@@ -29,7 +29,6 @@ trait UriTrait
 {
     /**
      * @param $uri
-     *
      * @return bool
      */
     protected function isValidUri($uri): bool

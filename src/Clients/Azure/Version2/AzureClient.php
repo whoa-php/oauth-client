@@ -18,7 +18,7 @@
 
 declare(strict_types=1);
 
-namespace Whoa\OAuthClient\Clients;
+namespace Whoa\OAuthClient\Clients\Azure\Version2;
 
 use GuzzleHttp\Exception\GuzzleException;
 use Jose\Component\Checker\AlgorithmChecker;
@@ -35,10 +35,10 @@ use Jose\Component\Signature\JWS;
 use Jose\Component\Signature\JWSTokenSupport;
 use Jose\Component\Signature\Serializer\CompactSerializer;
 use Whoa\JsonWebToken\Checkers\TenantChecker;
-use Whoa\OAuthClient\Contracts\Clients\AzureV2Interface;
+use Whoa\OAuthClient\Contracts\Clients\Azure\Version2\AzureClientInterface;
 use Whoa\OAuthClient\Contracts\IdentityPlatform\IdentityPlatformInterface;
-use Whoa\OAuthClient\Contracts\JsonWebToken\AzureV2JwtClaimInterface as JwtClaimInterface;
-use Whoa\OAuthClient\Contracts\JsonWebToken\AzureV2JwtIdentityInterface as JwtIdentityInterface;
+use Whoa\OAuthClient\Contracts\JsonWebToken\Azure\Version2\AzureJwtClaimInterface as JwtClaimInterface;
+use Whoa\OAuthClient\Contracts\JsonWebToken\Azure\Version2\AzureJwtIdentityInterface as JwtIdentityInterface;
 use Whoa\OAuthClient\Exceptions\InvalidArgumentException;
 use Whoa\OAuthClient\Exceptions\RuntimeException;
 use Whoa\OAuthClient\IdentityPlatform\IdentityPlatform;
@@ -46,7 +46,7 @@ use Whoa\OAuthClient\IdentityPlatform\IdentityPlatform;
 /**
  * @package Whoa\OAuthClient
  */
-class AzureV2 extends IdentityPlatform implements AzureV2Interface
+class AzureClient extends IdentityPlatform implements AzureClientInterface
 {
     /**
      * @inheritDoc
@@ -63,7 +63,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setProviderIdentifier(string $providerIdentifier): AzureV2Interface
+    public function setProviderIdentifier(string $providerIdentifier): AzureClientInterface
     {
         return $this->setProviderIdentifierImpl($providerIdentifier);
     }
@@ -83,7 +83,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setProviderName(string $providerName): AzureV2Interface
+    public function setProviderName(string $providerName): AzureClientInterface
     {
         return $this->setProviderNameImpl($providerName);
     }
@@ -103,7 +103,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setClientIdentifier(string $clientIdentifier): AzureV2Interface
+    public function setClientIdentifier(string $clientIdentifier): AzureClientInterface
     {
         return $this->setClientIdentifierImpl($clientIdentifier);
     }
@@ -123,7 +123,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setTenantIdentifier(string $tenantIdentifier): AzureV2Interface
+    public function setTenantIdentifier(string $tenantIdentifier): AzureClientInterface
     {
         return $this->setTenantIdentifierImpl($tenantIdentifier);
     }
@@ -131,7 +131,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setDiscoveryDocumentUri(string $discoveryDocumentUri): AzureV2Interface
+    public function setDiscoveryDocumentUri(string $discoveryDocumentUri): AzureClientInterface
     {
         return $this->setDiscoveryDocumentUriImpl($discoveryDocumentUri);
     }
@@ -139,7 +139,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setJwkSetUriKey(string $jwkSetUriKey): AzureV2Interface
+    public function setJwkSetUriKey(string $jwkSetUriKey): AzureClientInterface
     {
         return $this->setJwkSetUriKeyImpl($jwkSetUriKey);
     }
@@ -147,7 +147,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setJwkSetUri(string $jwkSetUri): AzureV2Interface
+    public function setJwkSetUri(string $jwkSetUri): AzureClientInterface
     {
         return $this->setJwkSetUriImpl($jwkSetUri);
     }
@@ -155,7 +155,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setJwkUri(string $jwkUri): AzureV2Interface
+    public function setJwkUri(string $jwkUri): AzureClientInterface
     {
         return $this->setJwkUriImpl($jwkUri);
     }
@@ -182,11 +182,11 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
             $jwkSet = $this->getJwkSetFromDiscoveryDocument();
 
             $this->setJwkSet($jwkSet);
-        } else if ($this->getJwkSetUri() !== null) {
+        } elseif ($this->getJwkSetUri() !== null) {
             $jwkSet = $this->getJwkSetFromUri();
 
             $this->setJwkSet($jwkSet);
-        } else if ($this->getJwkUri() !== null) {
+        } elseif ($this->getJwkUri() !== null) {
             $jwkSet = $this->getJwkFromUri();
 
             $this->setJwkSet($jwkSet);
@@ -217,7 +217,9 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
 
             return $this->getDataFromUri($discoveryDocumentUri);
         } catch (GuzzleException $exception) {
-            throw new RuntimeException(RuntimeException::ERROR_LOAD_DISCOVERY_DOCUMENT, null, 400, [], null, $exception);
+            throw new RuntimeException(
+                RuntimeException::ERROR_LOAD_DISCOVERY_DOCUMENT, null, 400, [], null, $exception
+            );
         }
     }
 
@@ -231,7 +233,14 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
 
             return $this->parseJsonArray($discoveryDocument);
         } catch (\JsonException $exception) {
-            throw new RuntimeException(RuntimeException::ERROR_PARSE_METADATA_DISCOVERY_DOCUMENT, null, 400, [], null, $exception);
+            throw new RuntimeException(
+                RuntimeException::ERROR_PARSE_METADATA_DISCOVERY_DOCUMENT,
+                null,
+                400,
+                [],
+                null,
+                $exception
+            );
         }
     }
 
@@ -242,14 +251,14 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     {
         try {
             $discoveryDocumentMetadata = $this->getDiscoveryDocumentMetadata();
-            $jwkSetUriKey              = $this->getJwkSetUriKey();
+            $jwkSetUriKey = $this->getJwkSetUriKey();
 
             if (array_key_exists($jwkSetUriKey, $discoveryDocumentMetadata) === false) {
                 throw new RuntimeException(RuntimeException::ERROR_UNDEFINED_JWK_SET_URI_KEY);
             }
 
             $jwkSetUri = $discoveryDocumentMetadata[$jwkSetUriKey];
-            $jwtSet    = $this->getDataFromUri($jwkSetUri);
+            $jwtSet = $this->getDataFromUri($jwkSetUri);
 
             return $this->parseJwkSet($jwtSet);
         } catch (GuzzleException $exception) {
@@ -263,7 +272,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     private function getJwkSetFromUri(): JWKSet
     {
         try {
-            $jwkSetUri      = $this->getJwkSetUri();
+            $jwkSetUri = $this->getJwkSetUri();
             $jwkSetMetadata = $this->getDataFromUri($jwkSetUri);
 
             return $this->parseJwkSet($jwkSetMetadata);
@@ -278,7 +287,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     private function getJwkFromUri(): JWKSet
     {
         try {
-            $jwkUri      = $this->getJwkUri();
+            $jwkUri = $this->getJwkUri();
             $jwkMetadata = $this->getDataFromUri($jwkUri);
 
             return $this->parseJwk($jwkMetadata);
@@ -290,7 +299,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setJwkSet($keys): AzureV2Interface
+    public function setJwkSet($keys): AzureClientInterface
     {
         return $this->setJwkImpl($this->parseJwkSet($keys));
     }
@@ -298,7 +307,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setJwk($values): AzureV2Interface
+    public function setJwk($values): AzureClientInterface
     {
         return $this->setJwkImpl($this->parseJwk($values));
     }
@@ -318,9 +327,12 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setMandatoryJwtHeaders(array $mandatoryJwtHeaders): AzureV2Interface
+    public function setMandatoryJwtHeaders(array $mandatoryJwtHeaders): AzureClientInterface
     {
-        $modifiedMandatoryJwtHeaders = array_intersect(AzureV2Interface::MANDATORY_JWT_HEADERS, $mandatoryJwtHeaders);
+        $modifiedMandatoryJwtHeaders = array_intersect(
+            AzureClientInterface::MANDATORY_JWT_HEADERS,
+            $mandatoryJwtHeaders
+        );
 
         $this->setMandatoryJwtHeadersImpl($modifiedMandatoryJwtHeaders);
 
@@ -342,9 +354,9 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setMandatoryJwtClaims(array $mandatoryJwtClaims): AzureV2Interface
+    public function setMandatoryJwtClaims(array $mandatoryJwtClaims): AzureClientInterface
     {
-        $modifiedMandatoryJwtClaims = array_intersect(AzureV2Interface::MANDATORY_JWT_CLAIMS, $mandatoryJwtClaims);
+        $modifiedMandatoryJwtClaims = array_intersect(AzureClientInterface::MANDATORY_JWT_CLAIMS, $mandatoryJwtClaims);
 
         $this->setMandatoryJwtClaimsImpl($modifiedMandatoryJwtClaims);
 
@@ -354,7 +366,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function enableVerification(bool $enableVerification = true): AzureV2Interface
+    public function enableVerification(bool $enableVerification = true): AzureClientInterface
     {
         return $this->setEnableVerificationImpl($enableVerification);
     }
@@ -362,7 +374,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     /**
      * @inheritDoc
      */
-    public function setSerializeJwt(string $serializeJwt): AzureV2Interface
+    public function setSerializeJwt(string $serializeJwt): AzureClientInterface
     {
         return $this->setSerializeJwtImpl($serializeJwt);
     }
@@ -377,7 +389,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
         }
 
         try {
-            $jwtLoader    = $this->getJwtLoader();
+            $jwtLoader = $this->getJwtLoader();
             $serializeJwt = $this->getSerializeJwt();
 
             $deserializeJwt = $jwtLoader->getSerializerManager()->unserialize($serializeJwt);
@@ -396,12 +408,12 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     {
         assert($this->checkVerification());
 
-        $serializeJwt   = $this->getSerializeJwt();
+        $serializeJwt = $this->getSerializeJwt();
         $deserializeJwt = $this->getDeserializeJwt();
 
         if ($format === IdentityPlatformInterface::KEY_DESERIALIZE_JWT) {
             return $deserializeJwt;
-        } else if ($format === IdentityPlatformInterface::KEY_SERIALIZE_JWT) {
+        } elseif ($format === IdentityPlatformInterface::KEY_SERIALIZE_JWT) {
             return $serializeJwt;
         } else {
             throw new InvalidArgumentException(InvalidArgumentException::ERROR_INVALID_JWT_FORMAT);
@@ -414,7 +426,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
     public function getJwtPayload(): ?array
     {
         $deserializeJwt = $this->getDeserializeJwt();
-        $jwtPayload     = $deserializeJwt->getPayload();
+        $jwtPayload = $deserializeJwt->getPayload();
 
         return $this->parseJwtPayload($jwtPayload);
     }
@@ -430,11 +442,11 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
 
         return [
             JwtIdentityInterface::KEY_PROVIDER_IDENTIFIER => $this->getProviderIdentifier(),
-            JwtIdentityInterface::KEY_PROVIDER_NAME       => $this->getProviderName(),
-            JwtIdentityInterface::KEY_TENANT_IDENTIFIER   => $this->getTenantIdentifier(),
-            JwtIdentityInterface::KEY_CLIENT_IDENTIFIER   => $this->getClientIdentifier(),
-            JwtIdentityInterface::KEY_USER_IDENTIFIER     => $jwtPayload[JwtClaimInterface::KEY_USER_IDENTIFIER],
-            JwtIdentityInterface::KEY_USERNAME            => $jwtPayload[JwtClaimInterface::KEY_USERNAME],
+            JwtIdentityInterface::KEY_PROVIDER_NAME => $this->getProviderName(),
+            JwtIdentityInterface::KEY_TENANT_IDENTIFIER => $this->getTenantIdentifier(),
+            JwtIdentityInterface::KEY_CLIENT_IDENTIFIER => $this->getClientIdentifier(),
+            JwtIdentityInterface::KEY_USER_IDENTIFIER => $jwtPayload[JwtClaimInterface::KEY_USER_IDENTIFIER],
+            JwtIdentityInterface::KEY_USERNAME => $jwtPayload[JwtClaimInterface::KEY_USERNAME],
         ];
     }
 
@@ -443,10 +455,10 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
      */
     protected function verifyJwtHeaders(): bool
     {
-        $jwtLoader               = $this->getJwtLoader();
+        $jwtLoader = $this->getJwtLoader();
         $jwtHeaderCheckerManager = $jwtLoader->getHeaderCheckerManager();
-        $deserializeJwt          = $this->getDeserializeJwt();
-        $mandatoryJwtHeaders     = $this->getMandatoryJwtHeaders();
+        $deserializeJwt = $this->getDeserializeJwt();
+        $mandatoryJwtHeaders = $this->getMandatoryJwtHeaders();
 
         $jwtHeaderCheckerManager->check($deserializeJwt, 0, $mandatoryJwtHeaders);
 
@@ -459,10 +471,10 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
      */
     protected function verifyJwtKeys(): bool
     {
-        $jwtLoader      = $this->getJwtLoader();
-        $jwtVerifier    = $jwtLoader->getJwsVerifier();
+        $jwtLoader = $this->getJwtLoader();
+        $jwtVerifier = $jwtLoader->getJwsVerifier();
         $deserializeJwt = $this->getDeserializeJwt();
-        $jwk            = $this->getJwk();
+        $jwk = $this->getJwk();
 
         return $jwtVerifier->verifyWithKeySet($deserializeJwt, $jwk, 0);
     }
@@ -474,16 +486,15 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
      */
     protected function verifyJwtClaims(): bool
     {
-        $deserializeJwtPayload  = $this->getJwtPayload();
+        $deserializeJwtPayload = $this->getJwtPayload();
         $jwtClaimCheckerManager = $this->getClaimCheckManager();
-        $mandatoryJwtClaims     = $this->getMandatoryJwtClaims();
+        $mandatoryJwtClaims = $this->getMandatoryJwtClaims();
 
         return empty($jwtClaimCheckerManager->check($deserializeJwtPayload, $mandatoryJwtClaims)) === false;
     }
 
     /**
      * @param string $jwtPayload
-     *
      * @return array
      */
     private function parseJwtPayload(string $jwtPayload): array
@@ -579,9 +590,7 @@ class AzureV2 extends IdentityPlatform implements AzureV2Interface
                 if (($verifyJwtClaims = $this->verifyJwtClaims()) === false) {
                     throw new RuntimeException(RuntimeException::ERROR_VERIFY_JWT_CLAIMS);
                 }
-            } catch (MissingMandatoryClaimException $exception) {
-                throw new RuntimeException(RuntimeException::ERROR_VERIFY_JWT_CLAIMS, null, 400, [], null, $exception);
-            } catch (InvalidClaimException $exception) {
+            } catch (MissingMandatoryClaimException|InvalidClaimException $exception) {
                 throw new RuntimeException(RuntimeException::ERROR_VERIFY_JWT_CLAIMS, null, 400, [], null, $exception);
             }
 

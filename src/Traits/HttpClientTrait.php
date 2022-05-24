@@ -36,7 +36,6 @@ trait HttpClientTrait
 
     /**
      * @param string $uri
-     *
      * @return string|null
      * @throws GuzzleException
      */

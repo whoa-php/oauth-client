@@ -18,20 +18,15 @@
 
 declare(strict_types=1);
 
-namespace Whoa\OAuthClient\Traits;
+namespace Whoa\OAuthClient\Package;
+
+use Whoa\Contracts\Provider\ProvidesContainerConfiguratorsInterface as CCI;
+use Whoa\Contracts\Provider\ProvidesRouteConfiguratorsInterface as RCI;
 
 /**
  * @package Whoa\OAuthClient
  */
-trait JsonTrait
+abstract class OAuthClientProvider implements CCI, RCI
 {
-    /**
-     * @param string $json
-     * @return array|null
-     * @throws \JsonException
-     */
-    protected function parseJsonArray(string $json): ?array
-    {
-        return $jsonArray = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-    }
+
 }

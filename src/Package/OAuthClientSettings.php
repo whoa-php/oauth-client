@@ -18,31 +18,28 @@
 
 declare(strict_types=1);
 
-namespace Whoa\OAuthClient\Contracts\JsonWebToken;
+namespace Whoa\OAuthClient\Package;
+
+use Whoa\Contracts\Settings\Packages\OAuthClientSettingsInterface;
 
 /**
  * @package Whoa\OAuthClient
  */
-interface AzureV2JwtClaimInterface
+abstract class OAuthClientSettings implements OAuthClientSettingsInterface
 {
-    /** @var string Key name */
-    const KEY_USER_IDENTIFIER = 'oid';
+    /**
+     * @inheritDoc
+     */
+    public function get(array $appConfig): array
+    {
+        return $this->getSettings();
+    }
 
-    /** @var string Key name */
-    const KEY_ISSUED_AT = 'iat';
-
-    /** @var string Key name */
-    const KEY_NOT_BEFORE = 'nbf';
-
-    /** @var string Key name */
-    const KEY_EXPIRATION_TIME = 'exp';
-
-    /** @var string Key name */
-    const KEY_AUDIENCE = 'aud';
-
-    /** @var string Key name */
-    const KEY_TENANT_IDENTIFIER = 'tid';
-
-    /** @var string Key name */
-    const KEY_USERNAME = 'preferred_username';
+    /**
+     * @return array
+     */
+    protected function getSettings(): array
+    {
+        return [];
+    }
 }

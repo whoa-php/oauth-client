@@ -18,28 +18,14 @@
 
 declare(strict_types=1);
 
-namespace Whoa\OAuthClient\Contracts\JsonWebToken;
+namespace Whoa\OAuthClient\Package;
+
+use Whoa\Contracts\Application\RoutesConfiguratorInterface;
 
 /**
  * @package Whoa\OAuthClient
  */
-interface AzureV2JwtIdentityInterface
+abstract class OAuthClientRoutesConfigurator implements RoutesConfiguratorInterface
 {
-    /** @var string Key name */
-    const KEY_PROVIDER_IDENTIFIER = 'provider_identifier';
 
-    /** @var string Key name */
-    const KEY_PROVIDER_NAME = 'provider_name';
-
-    /** @var string Key name */
-    const KEY_TENANT_IDENTIFIER = 'tenant_identifier';
-
-    /** @var string Key name */
-    const KEY_CLIENT_IDENTIFIER = 'client_identifier';
-
-    /** @var string Key name */
-    const KEY_USER_IDENTIFIER = 'user_identifier';
-
-    /** @var string Key name */
-    const KEY_USERNAME = 'username';
 }

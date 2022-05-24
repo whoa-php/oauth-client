@@ -28,13 +28,13 @@ use Jose\Component\Core\JWKSet;
 interface IdentityPlatformInterface
 {
     /** @var int Key name */
-    const KEY_SERIALIZE_JWT = 0;
+    public const KEY_SERIALIZE_JWT = 0;
 
     /** @var int Key name */
-    const KEY_DESERIALIZE_JWT = self::KEY_SERIALIZE_JWT + 1;
+    public const KEY_DESERIALIZE_JWT = self::KEY_SERIALIZE_JWT + 1;
 
     /** @var int Key name */
-    const KEY_LAST = self::KEY_DESERIALIZE_JWT + 1;
+    public const KEY_LAST = self::KEY_DESERIALIZE_JWT + 1;
 
     /**
      * @return string|null

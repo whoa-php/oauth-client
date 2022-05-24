@@ -18,20 +18,28 @@
 
 declare(strict_types=1);
 
-namespace Whoa\OAuthClient\Traits;
+namespace Whoa\OAuthClient\Contracts\JsonWebToken\Azure\Version2;
 
 /**
  * @package Whoa\OAuthClient
  */
-trait JsonTrait
+interface AzureJwtIdentityInterface
 {
-    /**
-     * @param string $json
-     * @return array|null
-     * @throws \JsonException
-     */
-    protected function parseJsonArray(string $json): ?array
-    {
-        return $jsonArray = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-    }
+    /** @var string Key name */
+    public const KEY_PROVIDER_IDENTIFIER = 'provider_identifier';
+
+    /** @var string Key name */
+    public const KEY_PROVIDER_NAME = 'provider_name';
+
+    /** @var string Key name */
+    public const KEY_TENANT_IDENTIFIER = 'tenant_identifier';
+
+    /** @var string Key name */
+    public const KEY_CLIENT_IDENTIFIER = 'client_identifier';
+
+    /** @var string Key name */
+    public const KEY_USER_IDENTIFIER = 'user_identifier';
+
+    /** @var string Key name */
+    public const KEY_USERNAME = 'username';
 }

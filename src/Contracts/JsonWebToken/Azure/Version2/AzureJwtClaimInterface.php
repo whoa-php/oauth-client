@@ -18,13 +18,31 @@
 
 declare(strict_types=1);
 
-namespace Whoa\OAuthClient\Contracts\JsonWebToken;
+namespace Whoa\OAuthClient\Contracts\JsonWebToken\Azure\Version2;
 
 /**
  * @package Whoa\OAuthClient
  */
-interface AzureV2JwtHeaderInterface
+interface AzureJwtClaimInterface
 {
     /** @var string Key name */
-    const KEY_PUBLIC_KEY_THUMBPRINT = 'kid';
+    public const KEY_USER_IDENTIFIER = 'oid';
+
+    /** @var string Key name */
+    public const KEY_ISSUED_AT = 'iat';
+
+    /** @var string Key name */
+    public const KEY_NOT_BEFORE = 'nbf';
+
+    /** @var string Key name */
+    public const KEY_EXPIRATION_TIME = 'exp';
+
+    /** @var string Key name */
+    public const KEY_AUDIENCE = 'aud';
+
+    /** @var string Key name */
+    public const KEY_TENANT_IDENTIFIER = 'tid';
+
+    /** @var string Key name */
+    public const KEY_USERNAME = 'preferred_username';
 }

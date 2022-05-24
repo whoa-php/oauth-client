@@ -34,7 +34,11 @@ use Whoa\OAuthClient\Traits\UriTrait;
  */
 abstract class IdentityPlatform implements IdentityPlatformInterface
 {
-    use JwtTrait, JwkTrait, HttpClientTrait, UriTrait, JsonTrait;
+    use HttpClientTrait;
+    use JsonTrait;
+    use JwkTrait;
+    use JwtTrait;
+    use UriTrait;
 
     /**
      * @var string|null
@@ -116,7 +120,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param string $providerIdentifier
-     *
      * @return IdentityPlatformInterface
      */
     protected function setProviderIdentifierImpl(string $providerIdentifier): IdentityPlatformInterface
@@ -136,7 +139,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param string $providerName
-     *
      * @return IdentityPlatformInterface
      */
     protected function setProviderNameImpl(string $providerName): IdentityPlatformInterface
@@ -156,7 +158,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param string $clientIdentifier
-     *
      * @return IdentityPlatformInterface
      */
     protected function setClientIdentifierImpl(string $clientIdentifier): IdentityPlatformInterface
@@ -176,7 +177,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param string $tenantIdentifier
-     *
      * @return IdentityPlatformInterface
      */
     protected function setTenantIdentifierImpl(string $tenantIdentifier): IdentityPlatformInterface
@@ -196,7 +196,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param string $discoveryDocumentUri
-     *
      * @return IdentityPlatformInterface
      */
     protected function setDiscoveryDocumentUriImpl(string $discoveryDocumentUri): IdentityPlatformInterface
@@ -218,7 +217,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param string $jwkSetUriKey
-     *
      * @return IdentityPlatformInterface
      */
     public function setJwkSetUriKeyImpl(string $jwkSetUriKey): IdentityPlatformInterface
@@ -238,7 +236,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param string $jwkSetUri
-     *
      * @return IdentityPlatformInterface
      */
     protected function setJwkSetUriImpl(string $jwkSetUri): IdentityPlatformInterface
@@ -259,8 +256,7 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
     }
 
     /**
-     * @param string $jwkUri
-     *
+     * @param string|null $jwkUri
      * @return IdentityPlatformInterface
      */
     protected function setJwkUriImpl(?string $jwkUri): IdentityPlatformInterface
@@ -282,7 +278,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param JWKSet $jwk
-     *
      * @return IdentityPlatformInterface
      */
     protected function setJwkImpl(JWKSet $jwk): IdentityPlatformInterface
@@ -302,7 +297,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param array $mandatoryJwtHeaders
-     *
      * @return IdentityPlatformInterface
      */
     protected function setMandatoryJwtHeadersImpl(array $mandatoryJwtHeaders): IdentityPlatformInterface
@@ -322,7 +316,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param array $mandatoryJwtClaims
-     *
      * @return IdentityPlatformInterface
      */
     protected function setMandatoryJwtClaimsImpl(array $mandatoryJwtClaims): IdentityPlatformInterface
@@ -343,7 +336,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param bool $enableVerification
-     *
      * @return IdentityPlatformInterface
      */
     protected function setEnableVerificationImpl(bool $enableVerification): IdentityPlatformInterface
@@ -363,7 +355,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param string $serializeJwt
-     *
      * @return IdentityPlatformInterface
      */
     protected function setSerializeJwtImpl(string $serializeJwt): IdentityPlatformInterface
@@ -383,7 +374,6 @@ abstract class IdentityPlatform implements IdentityPlatformInterface
 
     /**
      * @param JWS $deserializeJwt
-     *
      * @return IdentityPlatformInterface
      */
     protected function setDeserializeJwtImpl(JWS $deserializeJwt): IdentityPlatformInterface

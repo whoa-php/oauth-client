@@ -18,20 +18,13 @@
 
 declare(strict_types=1);
 
-namespace Whoa\OAuthClient\Traits;
+namespace Whoa\OAuthClient\Contracts\JsonWebToken\Azure\Version2;
 
 /**
  * @package Whoa\OAuthClient
  */
-trait JsonTrait
+interface AzureJwtHeaderInterface
 {
-    /**
-     * @param string $json
-     * @return array|null
-     * @throws \JsonException
-     */
-    protected function parseJsonArray(string $json): ?array
-    {
-        return $jsonArray = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-    }
+    /** @var string Key name */
+    public const KEY_PUBLIC_KEY_THUMBPRINT = 'kid';
 }

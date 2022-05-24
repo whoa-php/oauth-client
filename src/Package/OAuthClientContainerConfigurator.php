@@ -18,20 +18,14 @@
 
 declare(strict_types=1);
 
-namespace Whoa\OAuthClient\Traits;
+namespace Whoa\OAuthClient\Package;
+
+use Whoa\Contracts\Commands\ContainerConfiguratorInterface;
 
 /**
  * @package Whoa\OAuthClient
  */
-trait JsonTrait
+abstract class OAuthClientContainerConfigurator implements ContainerConfiguratorInterface
 {
-    /**
-     * @param string $json
-     * @return array|null
-     * @throws \JsonException
-     */
-    protected function parseJsonArray(string $json): ?array
-    {
-        return $jsonArray = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-    }
+
 }

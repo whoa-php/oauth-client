@@ -124,7 +124,7 @@ trait JwtTrait
     private ?HeaderCheckerManager $jwtHeaderCheckerManager = null;
 
     /**
-     * @var ClaimCheckerManager
+     * @var ClaimCheckerManager|null
      */
     private ?ClaimCheckerManager $jwtClaimCheckerManager = null;
 
@@ -142,8 +142,9 @@ trait JwtTrait
             throw new InvalidArgumentException(InvalidArgumentException::ERROR_MISSING_JWT_SERIALIZERS);
         }
 
-        if ($this->jwtSerializerManager === null)
+        if ($this->jwtSerializerManager === null) {
             $this->jwtSerializerManager = new JWSSerializerManager($this->getJwtSerializers());
+        }
 
         return $this->jwtSerializerManager;
     }
@@ -157,8 +158,9 @@ trait JwtTrait
             throw new InvalidArgumentException(InvalidArgumentException::ERROR_MISSING_JWT_ALGORITHMS);
         }
 
-        if ($this->jwtAlgorithmManager === null)
+        if ($this->jwtAlgorithmManager === null) {
             $this->jwtAlgorithmManager = new AlgorithmManager($this->getJwtAlgorithms());
+        }
 
         return $this->jwtAlgorithmManager;
     }
@@ -172,8 +174,9 @@ trait JwtTrait
             throw new InvalidArgumentException(InvalidArgumentException::ERROR_MISSING_JWT_ALGORITHM_MANAGER);
         }
 
-        if ($this->jwtVerifier === null)
+        if ($this->jwtVerifier === null) {
             $this->jwtVerifier = new JWSVerifier($this->getJwtAlgorithmManager());
+        }
 
         return $this->jwtVerifier;
     }
@@ -191,11 +194,12 @@ trait JwtTrait
             throw new InvalidArgumentException(InvalidArgumentException::ERROR_MISSING_JWT_TOKEN_TYPE_SUPPORTS);
         }
 
-        if ($this->jwtHeaderCheckerManager === null)
+        if ($this->jwtHeaderCheckerManager === null) {
             $this->jwtHeaderCheckerManager = new HeaderCheckerManager(
                 $this->getJwtHeaderCheckers(),
                 $this->getJwtTokenTypeSupports()
             );
+        }
 
         return $this->jwtHeaderCheckerManager;
     }
@@ -209,8 +213,9 @@ trait JwtTrait
             throw new InvalidArgumentException(InvalidArgumentException::ERROR_MISSING_JWT_CLAIM_CHECKERS);
         }
 
-        if ($this->jwtClaimCheckerManager === null)
+        if ($this->jwtClaimCheckerManager === null) {
             $this->jwtClaimCheckerManager = new ClaimCheckerManager($this->getJwtClaimCheckers());
+        }
 
         return $this->jwtClaimCheckerManager;
     }

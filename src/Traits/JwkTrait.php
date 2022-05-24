@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Whoa\OAuthClient\Traits;
 
+use InvalidArgumentException;
 use Jose\Component\Core\JWK;
 use Jose\Component\Core\JWKSet;
 use Whoa\OAuthClient\Exceptions\RuntimeException;
@@ -31,7 +32,6 @@ trait JwkTrait
 {
     /**
      * @param $keys
-     *
      * @return JWKSet
      */
     protected function parseJwkSet($keys): JWKSet
@@ -39,23 +39,22 @@ trait JwkTrait
         try {
             if ($keys instanceof JWKSet) {
                 return $keys;
-            } else if ($keys instanceof JWK) {
+            } elseif ($keys instanceof JWK) {
                 return new JWKSet([$keys]);
-            } else if (is_array($keys) === true) {
+            } elseif (is_array($keys) === true) {
                 return JWKSet::createFromKeyData($$keys);
-            } else if (is_string($keys) === true) {
+            } elseif (is_string($keys) === true) {
                 return JWKSet::createFromJson($keys);
             } else {
                 throw new RuntimeException(RuntimeException::ERROR_PARSE_JWK_SET);
             }
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             throw new RuntimeException(RuntimeException::ERROR_PARSE_JWK_SET, null, 400, [], null, $exception);
         }
     }
 
     /**
      * @param $values
-     *
      * @return JWKSet
      */
     protected function parseJwk($values): JWKSet
@@ -63,16 +62,16 @@ trait JwkTrait
         try {
             if ($values instanceof JWKSet) {
                 return $this->parseJwkSet($values);
-            } else if ($values instanceof JWK) {
+            } elseif ($values instanceof JWK) {
                 return $this->parseJwkSet(new JWKSet([$values]));
-            } else if (is_array($values) === true) {
+            } elseif (is_array($values) === true) {
                 return $this->parseJwkSet(new JWKSet([new JWK($values)]));
-            } else if (is_string($values) === true) {
+            } elseif (is_string($values) === true) {
                 return $this->parseJwkSet(new JWKSet([JWK::createFromJson($values)]));
             } else {
                 throw new RuntimeException(RuntimeException::ERROR_PARSE_JWK);
             }
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             throw new RuntimeException(RuntimeException::ERROR_PARSE_JWK, null, 400, [], null, $exception);
         }
     }
